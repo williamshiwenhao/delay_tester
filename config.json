@@ -1,0 +1,7 @@
+{
+    "sender_address": "127.0.0.1:26001",
+    "receiver_address": "127.0.0.1:26002",
+    "packet_length": 1400,
+    "tick_ms": 1,
+    "packet_pre_tick": 10
+}
