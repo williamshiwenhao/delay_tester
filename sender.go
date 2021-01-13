@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/binary"
+	"log"
 	"time"
 )
 
@@ -40,13 +41,17 @@ func (s *Sender) Run() {
 	s.tick = time.NewTicker(s.duration)
 	for ; ; <-s.tick.C {
 		for i := 0; i < Config.PacketPreTick; i++ {
-			putNowTime(packet)
+			putNowTime(time.Now(), packet)
 			s.conn.Send(packet)
 		}
 	}
 }
 
-func putNowTime(data []byte) {
-	now := time.Now()
-	binary.BigEndian.PutUint64(data, uint64(now.UnixNano()))
+func putNowTime(now time.Time, data []byte) {
+	b, err := now.MarshalBinary()
+	if err != nil {
+		log.Fatalf("Marshal time failed, err=%+v", err)
+	}
+	binary.LittleEndian.PutUint16(data, uint16(len(b)))
+	copy(data[2:], b)
 }

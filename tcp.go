@@ -47,7 +47,7 @@ func packetLen(data []byte) []byte {
 	const kUint32Size = 4
 	buffer := make([]byte, len(data)+kUint32Size)
 	binary.LittleEndian.PutUint32(buffer, uint32(len(data)))
-	copy(data[kUint32Size:], data)
+	copy(buffer[kUint32Size:], data)
 	return buffer
 }
 

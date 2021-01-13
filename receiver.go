@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/binary"
+	"log"
 	"time"
 )
 
@@ -66,6 +67,11 @@ func (r *receiver) Run() {
 }
 
 func getPacketTime(data []byte) time.Time {
-	uintTime := binary.BigEndian.Uint64(data)
-	return time.Unix(0, int64(uintTime))
+	length := binary.LittleEndian.Uint16(data)
+	var t time.Time
+	err := t.UnmarshalBinary(data[2 : 2+length])
+	if err != nil {
+		log.Fatalf("Unmarshal binary failed, err=%+v", err)
+	}
+	return t
 }
